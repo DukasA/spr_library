@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Rent Book</title>
+    <!-- Ваші стилі та посилання на ресурси CSS -->
+</head>
+<body>
+<h2>Rent a Book</h2>
+<form th:action="@{/library/rent}" method="post">
+    <select name="bookId">
+        <option th:each="book : ${books}" th:value="${book.id}" th:text="${book.title}"></option>
+    </select>
+    <button type="submit">Rent</button>
+</form>
+<!-- Інші елементи сторінки, які можуть бути необхідні -->
+</body>
+</html>

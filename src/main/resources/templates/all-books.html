@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity6">
+<head>
+    <meta charset="UTF-8">
+    <title>All Books</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            padding-top: 5rem;
+        }
+    </style>
+</head>
+<body>
+
+<nav class="navbar navbar-expand-md navbar-dark bg-dark fixed-top">
+    <a class="navbar-brand" href="http://localhost:8080/library/all">Library App</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarsExampleDefault"
+            aria-controls="navbarsExampleDefault" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse" id="navbarsExampleDefault">
+        <ul class="navbar-nav mr-auto">
+            <li class="nav-item">
+                <a class="nav-link" href="/library/all">Books</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="/library/rentals">Rentals</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="/library/rentals?overdueOnly=true">Overdue Rentals</a>
+            </li>
+        </ul>
+        <div sec:authorize="!isAuthenticated()">
+            <ul class="navbar-nav ml-auto">
+                <li class="nav-item">
+                    <a class="nav-link" href="/login" >Login</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/signup" >Register</a>
+                </li>
+            </ul>
+        </div>
+        <div sec:authorize="isAuthenticated()">
+            <ul class="navbar-nav ml-auto">
+                <li class="nav-item">
+                    <a class="nav-link" href="/logout" >Logout</a>
+                </li>
+
+            </ul>
+        </div>
+    </div>
+
+</nav>
+
+<main role="main" class="container">
+
+    <h2>All Books</h2>
+
+    <table class="table">
+        <thead class="thead-dark">
+        <tr>
+            <th scope="col">Title</th>
+            <th scope="col">Author</th>
+            <th scope="col">ISBN</th>
+            <th scope="col">Status</th>
+            <th scope="col">Actions</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="book : ${books.getData()}">
+            <td th:text="${book.title}">Title</td>
+            <td th:text="${book.author}">Author</td>
+            <td th:text="${book.isbn}">ISBN</td>
+            <td th:text="${book.status}">Status</td>
+            <div sec:authorize="isAuthenticated()">
+                <td th:if="${book.status == 'Available'}">
+                    <form th:action="@{/library/rent/{id}(id=${book.id})}" method="post">
+                        <button  type="submit" class="btn btn-primary">Rent</button>
+                    </form>
+                </td>
+            </div>
+        </tr>
+        </tbody>
+    </table>
+    <div sec:authorize="isAuthenticated()">
+        <a class="btn btn-success" th:href="@{/library/add-book}">Add New Book</a>
+    </div>
+
+</main>
+
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+</body>
+</html>
